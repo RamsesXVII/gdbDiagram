@@ -34,11 +34,12 @@ body {
 <script src="jquery.min.js"></script>
 <script src="d3.v3.js"></script>
 <script>
-
+var timestampList=[]
+var idList=[]
 var data = [ { label: "Data Set 1", 
                x: [0, 0, 1, 1, 2,2,3,3,4,4], 
                y: [0, 0.2, 0.2, 0.4, 0.4,0.2,0.2,0.4,0.4] }] ;
-
+var aspathToId={}
 
 
 var xy_chart = d3_xy_chart()
@@ -52,7 +53,7 @@ var svg = d3.select("body").append("svg")
 
 var bgpUpdates =$.getJSON('http://localhost:8000/data.json', function(data) {
 
-var aspathToId = {}; // or var map = {};
+aspathToId = {}; // or var map = {};
 
 var idToTimeStamp={}
 idToTimeStamp[[0]]=[0]
@@ -64,11 +65,11 @@ var counterId=0.2
  console.log(initialState)
  console.log(updates)
 
-var timestampList=[bgpUpdates.responseJSON.data.query_starttime]
-var idList=[[0]]
+timestampList=[bgpUpdates.responseJSON.data.query_starttime]
+idList=[0]
 
 
-var idPrev=[0]
+var idPrev=0
 var timestampPrev=bgpUpdates.responseJSON.data.query_starttime
 
 for(var update in updates ){
@@ -91,7 +92,7 @@ for(var update in updates ){
     idList.push(aspathToId[path])
     timestampList.push(timestamp)
 
-    idPrev=path
+    idPrev=aspathToId[path]
 
 
 
@@ -106,7 +107,7 @@ for(var update in updates ){
     idList.push(aspathToId[path])
     timestampList.push(timestamp)
 
-    idPrev=path
+    idPrev=aspathToId[path]
 
   }
 
@@ -118,6 +119,10 @@ for(var update in updates ){
 
 });
 
+console.log("************************");
+for (var path in idList) {
+	console.log(idList[path]);
+}
 
 function d3_xy_chart() {
     var width = 640,  
