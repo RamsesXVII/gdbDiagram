@@ -34,24 +34,23 @@ body {
 <script src="jquery.min.js"></script>
 <script src="d3.v3.js"></script>
 <script>
+
 var timestampList=[]
 var idList=[]
-var data = [ { label: "Data Set 1", 
-               x: [0, 0, 1, 1, 2,2,3,3,4,4], 
-               y: [0, 0.2, 0.2, 0.4, 0.4,0.2,0.2,0.4,0.4] }] ;
 var aspathToId={}
 
 
-var xy_chart = d3_xy_chart()
-    .width(960)
-    .height(500)
-    .xlabel("X Axis")
-    .ylabel("Y Axis") ;
-var svg = d3.select("body").append("svg")
-    .datum(data)
-    .call(xy_chart) ;
+
 
 var bgpUpdates =$.getJSON('http://localhost:8000/data.json', function(data) {
+
+
+
+var data = [ { label: "Data Set 1", 
+               x: [], 
+               y: [] }] ;
+
+
 
 aspathToId = {}; // or var map = {};
 
@@ -74,8 +73,9 @@ var timestampPrev=bgpUpdates.responseJSON.data.query_starttime
 
 for(var update in updates ){
   cpId=updates[update].attrs.source_id;
-  
-  if (cpId="10-217.29.66.192") {
+  console.log(cpId);
+  if (cpId=="16-198.32.124.130") {
+  	console.log("++++++++++++++++++++++++++")
     path=updates[update].attrs.path;
     timestamp=updates[update].timestamp;
     type=updates[update].type;
@@ -112,20 +112,37 @@ for(var update in updates ){
   }
 
 
-
 }
 }
 
+for(var id in idList){
+	data[0].y.push(idList[id]);
+}
 
-});
+for(var timestamp in timestampList){
+	data[0].x.push(timestampList[timestamp]);
+}
 
 console.log("************************");
 for (var path in idList) {
 	console.log(idList[path]);
 }
 
+
+var xy_chart = d3_xy_chart()
+    .width(1960)
+    .height(500)
+    .xlabel("X Axis")
+    .ylabel("Y Axis") ;
+var svg = d3.select("body").append("svg")
+    .datum(data)
+    .call(xy_chart) ;
+
+
+
+
 function d3_xy_chart() {
-    var width = 640,  
+    var width = 1960,  
         height = 480, 
         xlabel = "X Axis Label",
         ylabel = "Y Axis Label" ;
@@ -261,7 +278,7 @@ function d3_xy_chart() {
 
     return chart;
 }
-
+});
 </script>
 
 
